@@ -133,7 +133,14 @@
 
 - 页面可见性可以有哪些用途
 
-<!-- 1. 通过 visibilityState 值可以检测当前页面是否可见，以及打开网页的时间等，在切换页面时，自动暂停视频、音频播放。 -->
+1. 通过 visibilityState 值可以检测当前页面是否可见，以及打开网页的时间等，在切换页面时，自动暂停视频、音频播放。
+
+```javascript
+document.addEventListener("visibilitychange", function () {
+  console.log(document.visibilityState);
+  // Modify behavior...
+});
+```
 
 ## CSS 篇
 
@@ -154,10 +161,3 @@
 ## 性能优化 篇
 
 ---
-
-```
-    function fun(){
-         echo "这是一句非常牛逼的代码";
-    }
-    fun();
-```
