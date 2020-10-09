@@ -121,6 +121,20 @@
 1.  作用： 用来定义与表单控件的关系，当点击 label 时，会自动聚焦到与之关联的表单控件。
 2.  使用： `<label for="Name">Number:</label><input type=“text“name="Name" id="Name"/> <label>Date:<input type="text" name="B"/></label>`
 
+- Html5 的 form 如何关闭自动完成功能？
+
+1. 给不想要提示的 form 或者 input 标签设置 autocomplete=off 属性
+
+- 如何实现浏览器内多个标签页之间的通信?
+
+1. WebSocket、SharedWorker
+2. 调用 localstorge、cookies 等本地存储方式
+3. localstorge 另一个浏览上下文里被添加、修改或删除时，它都会触发一个事件，我们通过监听事件，控制它的值来进行页面信息通信；
+
+- 页面可见性可以有哪些用途
+
+<!-- 1. 通过 visibilityState 值可以检测当前页面是否可见，以及打开网页的时间等，在切换页面时，自动暂停视频、音频播放。 -->
+
 ## CSS 篇
 
 ---
@@ -140,3 +154,10 @@
 ## 性能优化 篇
 
 ---
+
+```
+    function fun(){
+         echo "这是一句非常牛逼的代码";
+    }
+    fun();
+```
