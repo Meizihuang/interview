@@ -89,13 +89,17 @@
 
   1. IE6/7/8 可以通过 documet.createElement 创建新标签，使用该特性让这些浏览器支持，需要添加默认样式。
   2. 使用框架 html5shim
-  <!--[if lt IE 9]>
-  		<script> src="http://html5shim.googlecode.com/svn/trunk/html5.js"</script>
-  <![endif]-->
+     (```)
 
-  - 区分
+    <!--[if lt IE 9]>
+    		<script> src="http://html5shim.googlecode.com/svn/trunk/html5.js"</script>
+    <![endif]-->
 
-  1. 在文档声明上，baihtml 有很长的一段代码，并且很难 du 记住这段代码，都是 zhi 靠工具直接生 dao 成，而 html5 却是不同，只有简简单单的声明，也方便人们的记忆，更加精简。
+(```)
+
+- 区分
+
+1. 在文档声明上，baihtml 有很长的一段代码，并且很难 du 记住这段代码，都是 zhi 靠工具直接生 dao 成，而 html5 却是不同，只有简简单单的声明，也方便人们的记忆，更加精简。
 
 - Html 语义化的优点
 
