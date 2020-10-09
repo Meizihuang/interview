@@ -34,7 +34,7 @@
       - 不会独占一行, 不能设置 width、height 属性值，宽高由内容撑开。
       - 可以使用 padding 上下左右都有效果，但是 margin 只有 left 和 right 有效果，top 和 bottom 都不产生效果。
 
-  3.  常见空元素：<br/> <input/> <img/> <hr/> <meta/> <link/>
+  3.  常见空元素：`<br/> <input/> <img/> <hr/> <meta/> <link/>`
 
   4.  行内块元素： img input
 
@@ -46,7 +46,7 @@
       - inline-blick 布局元素之间会因为回车符产生空白符而出现 4px 的间隙。
       - float 布局元素换行时会因为前面的元素高度不同出现参差不齐的情况，而 inline-blick 不会。
       - 去除 inline-blick 元素之间间隙的方法，在父元素上添加{font-size： 0}，即字体大小设置为 0。
-      - inline-block 在 ie6/ie7 浏览器下的兼容性：对于行内元素直接使用{dislplay:inline-block;}，对于块级元素：需添加{display:inline;zoom:1;}
+      - inline-block 在 ie6/ie7 浏览器下的兼容性：对于行内元素直接使用{dislplay:inline-block;}，对于块级元素：需添加{display:inline-block;zoom:1;}
       - 对于横向排列东西来说，我更倾向与使用 inline-block 来布局，因为这样清晰，也不用再像浮动那样清除浮动，害怕布局混乱等等,对于浮动布局就用于需要文字环绕的时候，毕竟这才是浮动真正的用武之地，水平排列的是就交给 inline-block 了。
 
 - css 样式导入时，link 和@import 的区别？
@@ -216,6 +216,69 @@
 
   - 可继承样式： font-size、font-family、color
   - 不可继承样式： border、height、width、padding、margin
+
+- CSS 优先级如何计算？
+
+  1.  优先级就近原则，同权重的情况下样式定义最近这为准；
+  2.  载入样式以最后载入的为准；
+  3.  优先级：
+      - 同权重：内联样式表（标签内部）> 嵌入样式表（当前文件中）> 外部样式表（外部文件中）
+      - ！important > 内联样式 > id > class > 标签 > 通配符 > 继承 > 默认
+
+- CSS3 新增伪类有哪些？
+
+  - :first-of-type 选择父元素下的第一个元素
+  - :last-of-type 选择父元素下的最后一个元素
+  - :nth-child(n) 选择父元素下的第 n 个元素
+  - ::after 向元素之后添加内容，可以用来清除浮动
+  - ::before 向元素之前添加内容
+  - :disabled 控制表单控件的禁用状态
+  - :checked 单选框或者复选框被选中
+
+- 如何居中 div？
+  - 水平居中：给 div 设置宽度，然后添加 margin: 0 auto
+  ```css
+  div {
+    width: 200px;
+    margin: 0 auto;
+  }
+  ```
+  - 绝对定位的 div 居中
+  ```css
+  div {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    left: 0;
+    right: 0;
+    top: 0;
+    left: 0;
+    margin: auto;
+  }
+  ```
+  - 水平垂直居中一
+  ```css
+  div {
+    /* 已知宽高 */
+    position: absolute; /* 相对定位或者绝对定位都行 */
+    width: 200px;
+    height: 200px;
+    top: 50%;
+    left: 50%;
+    margin-top: -100px;
+    margin-left: -100px;
+  }
+  ```
+  - 水平垂直居中二
+  ```css
+  div {
+    /* 已知宽高 */
+    position: absolute; /* 相对定位或者绝对定位都行 */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  ```
 
 ## Javascript 篇
 
