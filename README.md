@@ -89,7 +89,7 @@
 
   1. IE6/7/8 可以通过 documet.createElement 创建新标签，使用该特性让这些浏览器支持，需要添加默认样式。
   2. 使用框架 html5shim
-     `<!--[if lt IE 9]> <script> src="http://html5shim.googlecode.com/svn/trunk/html5.js"</script> <![endif]--> `
+     `<!--[if lt IE 9]> <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"> </script> <![endif]--> `
 
 - 区分
 
@@ -119,7 +119,7 @@
 - label 的作用是什么，怎么使用
 
 1.  作用： 用来定义与表单控件的关系，当点击 label 时，会自动聚焦到与之关联的表单控件。
-2.  使用： <input type=“text“name="Name" id="Name"/> <label>Date:<input type="text" name="B"/></label>
+2.  使用： `<label for="Name">Number:</label><input type=“text“name="Name" id="Name"/> <label>Date:<input type="text" name="B"/></label>`
 
 ## CSS 篇
 
