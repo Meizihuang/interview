@@ -359,14 +359,148 @@
 
   - 背景
 
-    - background-image: CSS3中可以通过background-image属性添加背景图片。不同的背景图像和图像用逗号隔开，所有的图片中显示在最顶端的为第一张。
-    - background-size: background-size指定背景图像的大小
+    - background-image: CSS3 中可以通过 background-image 属性添加背景图片。不同的背景图像和图像用逗号隔开，所有的图片中显示在最顶端的为第一张。
+    - background-size: background-size 指定背景图像的大小
     - background-origin: background-origin 属性指定了背景图像的位置区域。
-    - background-clip: CSS3中background-clip背景剪裁属性是从指定位置开始绘制。
+    - background-clip: CSS3 中 background-clip 背景剪裁属性是从指定位置开始绘制。
+
+  - 文本效果
+
+    | 属性        |                事例                |                             说明 |
+    | ----------- | :--------------------------------: | -------------------------------: |
+    | text-shadow | text-shadow: 5px 5px 5px #FF0000;  | text-shadow 属性适用于文本阴影。 |
+    | box-shadow  | box-shadow: 10px 10px 5px #888888; |  box-shadow 属性适用于盒子阴影。 |
+
+  - transform 转换
+
+    | 属性        |                                                     说明                                                     |
+    | ----------- | :----------------------------------------------------------------------------------------------------------: |
+    | translate() |                translate()方法，根据左(X 轴)和顶部(Y 轴)位置给定的参数，从当前元素位置移动。                 |
+    | rotate()    |              rotate()方法，在一个给定度数顺时针旋转的元素。负值是允许的，这样是元素逆时针旋转。              |
+    | skew()      | 包含两个参数值，分别表示 X 轴和 Y 轴倾斜的角度，如果第二个参数为空，则默认为 0，参数为负表示向相反方向倾斜。 |
+    | scale()     |                scale()方法，该元素增加或减少的大小，取决于宽度（X 轴）和高度（Y 轴）的参数：                 |
+
+  - transition 过渡
+
+    - 重要：实现过渡效果必须满足两个条件
+
+      1. 指定要添加效果的 CSS 属性
+      2. 指定效果的持续时间。
+
+    | 属性                       |                     描述                     |
+    | -------------------------- | :------------------------------------------: |
+    | transition                 | 简写属性，用于在一个属性中设置四个过渡属性。 |
+    | transition-property        | 简写属性，用于在一个属性中设置四个过渡属性。 |
+    | transition-duration        |      定义过渡效果花费的时间。默认是 0。      |
+    | transition-timing-function |   规定过渡效果的时间曲线。默认是 "ease"。    |
+    | transition-delay           |       规定过渡效果何时开始。默认是 0。       |
+
+  - animation 动画
+
+    - @keyframes 规则
+
+      1. @keyframes 规则是创建动画。
+      2. @keyframes 规则内指定一个 CSS 样式和动画将逐步从目前的样式更改为新的样式
+
+    - 重要：当在 @keyframes 创建动画，把它绑定到一个选择器，否则动画不会有任何效果。指定至少这两个 CSS3 的动画属性绑定向一个选择器。
+
+      1. 规定动画的名称
+      2. 规定动画的时长
+
+    | 姓名                      |                                           技能                                           |
+    | ------------------------- | :--------------------------------------------------------------------------------------: |
+    | @keyframes                |                                        规定动画。                                        |
+    | animation                 |                                 所有动画属性的简写属性。                                 |
+    | animation-name            |                               规定 @keyframes 动画的名称。                               |
+    | animation-duration        |                     规定动画完成一个周期所花费的秒或毫秒。默认是 0。                     |
+    | animation-timing-function |                           规定动画的速度曲线。默认是 "ease"。                            |
+    | animation-fill-mode       | 规定当动画不播放时（当动画完成时，或当动画有一个延迟未开始播放时），要应用到元素的样式。 |
+    | animation-delay           |                               规定动画何时开始。默认是 0。                               |
+    | animation-iteration-count |                             规定动画被播放的次数。默认是 1。                             |
+    | animation-direction       |                   规定动画是否在下一周期逆向地播放。默认是 "normal"。                    |
+    | animation-play-state      |                      规定动画是否正在运行或暂停。默认是 "running"。                      |
 
 ## Javascript 篇
 
 ---
+
+## 性能优化 篇
+
+---
+
+## Javascript 框架篇
+
+---
+
+### React 篇
+
+- 什么是 JSX ? 为什么要使用 JSX ?
+
+  - JSX 是一个 JavaScript 的语法扩展，仅仅只是 React.createElement(component,props,...childrens)函数的语法糖。
+  - 可以让我们在 javascript 中，使用类 HTML 模板语法，进行页面描述，它拥有 Javascript 的全部功能。
+
+- 如何在 Ract 中创建组件？
+
+  - 函数组件：纯 Javascript 函数，接受 props 对象作为第一个参数并返回 React 元素
+
+    ```javascript
+    function Greeting({ messages }) {
+      return <h1>{`Hello ${message}`}</h1>;
+    }
+    ```
+
+  - 类组件：改写上面组件
+
+    ```javascript
+    class Greeting extends React.component {
+      constructor(props) {
+        super(props);
+      }
+      render() {
+        return <h1>{`Hello, ${this.props.message}`}</h1>;
+      }
+    }
+    ```
+
+  - 上述两个组件在使用上没有差别
+
+    ```javascript
+    <Greeting message="semlinker" />
+    ```
+
+    但在 React 内部是差别的
+
+    ```javascript
+    // 函数组件
+    const result = Greeting(props); // <p>Hello</p>
+
+    // 类组件 React需要先使用new 操作符将其实例化，然后调用事例的render方法
+    const instance = new Greeting(props); // Greeting {}
+    const result = instance.render(); // <p>Hello</p>
+    ```
+
+- 何时使用类组件和函数组件
+
+  1. 当需要使用 getSnapshotBeforeUpdate，getDerivedStateFromError 和 componentDidCatch 生命周期的时候。
+  2. 一些第三方的库可能还暂时无法兼容 Hook。
+
+- 组件通信
+
+- 高阶组件
+
+- Context
+
+- Refs 转发
+
+- Refs & DOM
+
+- Render Props
+
+- 生命周期
+
+- 事件合成
+
+- HOOK
 
 ## NodeJs 篇
 
@@ -375,11 +509,3 @@
 ## Webpack 篇
 
 ---
-
-## 性能优化 篇
-
----
-
-```
-
-```
