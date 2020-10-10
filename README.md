@@ -236,14 +236,18 @@
   - :checked 单选框或者复选框被选中
 
 - 如何居中 div？
+
   - 水平居中：给 div 设置宽度，然后添加 margin: 0 auto
+
   ```css
   div {
     width: 200px;
     margin: 0 auto;
   }
   ```
+
   - 绝对定位的 div 居中
+
   ```css
   div {
     position: absolute;
@@ -256,7 +260,9 @@
     margin: auto;
   }
   ```
+
   - 水平垂直居中一
+
   ```css
   div {
     /* 已知宽高 */
@@ -269,7 +275,9 @@
     margin-left: -100px;
   }
   ```
+
   - 水平垂直居中二
+
   ```css
   div {
     /* 已知宽高 */
@@ -279,6 +287,67 @@
     transform: translate(-50%, -50%);
   }
   ```
+
+  -水平居中三
+
+  ```css
+  div .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  ```
+
+- transform 与 position 的恩怨情仇
+
+  - transform 会提升元素的垂直地位
+
+    1. 正常情况下两个相邻元素，后一个做 margin-left: -100px 会覆盖前一个元素，但是如果前一个元素使用了 transform 属性，则结果相反。
+
+  - transform 限制 position: fixed 的跟随效果。
+
+    1. 正常情况下元素设置 fixed 不会跟随滚动条滚动。但是如果父元素使用了 transform 属性会导致 fixed 失效变为跟随滚条滚动。（在 chrome 和 firefo 下）
+
+  - transform 改变 overflow 对 absolute 元素的限制
+
+    1.  正常情况下父元素使用 overflow: hidden 子元素使用 position: absolute , 如果子元素溢出，父元素的 overflow: hidden 是不能裁剪的。但是如果给父元素或者父子之间的嵌套一层使用 transform 则 overflow: hidden 将会起作用。
+
+  - transform 限制 absolute 的 100%宽度大小
+
+    1. 正常情况下设置了 absolute 的子元素的宽度 100%会根据第一个非 static 值得 position 祖先元素计算，没有就 window，但是如果容器设置了 transform 属性，则 100%宽度都是相对设置了 transform 得容器计算。
+
+  - 补充说明
+    1. 在 mac safari 浏览器下，使用 transform: translate3d(0,0,0) 可以避免文字在其他元素 transition 或 animation 时候，粗细渲染跟着变化的问题。
+
+- display 有哪些值?
+
+  - block 块元素
+  - none 元素不显示，并从文档流中移除
+  - inline 行内元素
+  - inline-block 同行显示，可以设置宽高
+  - table 此元素会作为块级表格显示
+  - list-item 象块类型元素一样显示，并添加样式列表标记
+  - inherit 规定应该从父元素继承 display 属性的值
+
+- position 的值 relative absolute fixed 的定位参照
+
+  - relative 生成相对定位元素，相对于其正常位置定位
+  - absolute 生成绝对定位元素，相对第一个 position 值不为 static 的父元素定位
+  - fixed 生成绝对定位，相对于浏览器窗口定位
+  - static 默认值。没有定位，元素出现在正常的流中（忽略 top, bottom, left, right z-index 声明）
+  - inherit 规定从父元素继承 position 属性的值
+
+- CSS3 有哪些新特性？
+
+  - 新增了各种 CSS 选择器
+
+    | 选择器         |      事例       |                                          说明 |
+    | -------------- | :-------------: | --------------------------------------------: |
+    | :not()         |     :not(p)     |                     选择每个并非 p 元素的元素 |
+    | :empty         |     p:empty     | 选择每个没有任何子级的 p 元素（包括文本节点） |
+    | :disabled      | input:disabled  |                      选择每一个禁用的输入元素 |
+    | :nth-child(n)  | p:nth-child(2)  |         选择每个 p 元素是其父级的第二个子元素 |
+    | :first-of-type | p:first-of-type |        选择每个 p 元素是其父级的第一个 p 元素 |
 
 ## Javascript 篇
 
