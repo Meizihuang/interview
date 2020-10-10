@@ -339,7 +339,7 @@
 
 - CSS3 有哪些新特性？
 
-  - 新增了各种 CSS 选择器
+  - 新增了各种 CSS 选择器,如：
 
     | 选择器         |      事例       |                                          说明 |
     | -------------- | :-------------: | --------------------------------------------: |
@@ -348,6 +348,21 @@
     | :disabled      | input:disabled  |                      选择每一个禁用的输入元素 |
     | :nth-child(n)  | p:nth-child(2)  |         选择每个 p 元素是其父级的第二个子元素 |
     | :first-of-type | p:first-of-type |        选择每个 p 元素是其父级的第一个 p 元素 |
+
+  - 边框
+
+    | 属性          |                   事例                    |          说明 |
+    | ------------- | :---------------------------------------: | ------------: |
+    | border-radius |            border-radius:25px;            |     CSS3 圆角 |
+    | border-image  | border-image:url(border.png) 30 30 round; | CSS3 边界图片 |
+    | box-shadow    |    box-shadow: 10px 10px 5px #888888;     |   CSS3 盒阴影 |
+
+  - 背景
+
+    - background-image: CSS3中可以通过background-image属性添加背景图片。不同的背景图像和图像用逗号隔开，所有的图片中显示在最顶端的为第一张。
+    - background-size: background-size指定背景图像的大小
+    - background-origin: background-origin 属性指定了背景图像的位置区域。
+    - background-clip: CSS3中background-clip背景剪裁属性是从指定位置开始绘制。
 
 ## Javascript 篇
 
