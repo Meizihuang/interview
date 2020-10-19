@@ -915,16 +915,15 @@ ReactDOM.render(
 
       事件循环让 Node.js 可以通过将操作转移到系统内核中来执行异步且具有非阻塞的 I/O（尽管 Javascript 是单线程的），但是由于内核都是多线程的，因此它们可以处理在后台执行的多个操作。当其中一个操作完成时，内核会告诉 Node.js，以便 Node.js 可以将相应的回调添加到轮询队列中以最终执行。当 Node.js 启动时会初始化 event loop，每一个 enent loop 都会包含按如下顺序六个循环阶段：
 
-      ```flow
-      st=>start: 开始
-      op=>operation: My Operation
-      cond=>condition: Yes or No?
-      e=>end
-      st->op->cond
-      cond(yes)->e
-      cond(no)->op
-
-      ```
+    ````mermaid
+    flowchat
+    st=>start: 开始
+    ipt=>inputoutput: 输入一个x
+    op=>operation: 处理加工x+1
+    cond=>condition: 溢出（是或否？）
+    sub=>subroutine: 子流程
+    io=>inputoutput: 输出x
+    ed=>end: 结束
 
     - 调用堆栈
 
@@ -964,7 +963,7 @@ ReactDOM.render(
       // baz
       // 应该在 baz 之后、bar 之前
       // bar
-      ```
+    ````
 
 ### API 篇
 
