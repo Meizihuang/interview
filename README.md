@@ -420,6 +420,20 @@
     | animation-direction       |                   规定动画是否在下一周期逆向地播放。默认是 "normal"。                    |
     | animation-play-state      |                      规定动画是否正在运行或暂停。默认是 "running"。                      |
 
+- 经常遇到的浏览器兼容性问题，原因，解决办法以及常用 hack 技巧
+
+  - png24 位的图片在 IE6 浏览器不透明，解决方案改用 png8
+  - 浏览器默认元素的 margin 和 padding 不同。解决方案是加一个全局的\*{margin:0;padding:0;}来统一
+  - Chrome 中文界面下默认会将小于 12px 的文本强制按照 12px 显示,可通过加入 CSS 属性 -webkit-text-size-adjust: none; 解决。
+  - 超链接访问过后 hover 样式就不出现了 被点击访问过的超链接样式不在具有 hover 和 active 了解决方法是改变 CSS 属性的排列顺序:L-V-H-A : a:link {} a:visited {} a:hover {} a:active {}
+  - 使用 meta 标签来调节浏览器的渲染方式，告诉浏览器用哪种内核渲染，360 双核浏览器就是在 ie 和 chrome 之间来回切换，现在使用 meta 标签来强制使用最新的内核渲染页面
+    `<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">`
+  - rgba 不支持 IE8 解决：用 opacity
+  - CSS3 前缀
+    ```css
+      -webkit- webkit渲染引擎
+    ```
+
 ## Javascript 篇
 
 ---
@@ -486,25 +500,474 @@
 
 - 组件通信
 
-- 高阶组件
+- Context 组件间共享数据
 
-- Context
+  - React.createContext()
+  - Context.Provider
+  - Class.contextType
+  - Context.Consumer
+  - Context.displayName
+
+  ```javascript
+    // 创建 Context
+    const myContext = React.createContext("default value");
+
+    // 父组件提供需要传递的数据
+    <myContext.Privider value="object"></myContext.Privider>
+
+    // class 组件获取到 this.context
+    myClass.contextType = myContext
+
+    // 函数组件使用context
+    <MyContext.Consumer>
+      {value => /* 基于 context 值进行渲染*/}
+    </MyContext.Consumer>
+  ```
 
 - Refs 转发
 
+  - 允许访问 DOM 节点或者在 render 方法中创建 React 元素。将 ref 自动通过组件传递到其子组件的技巧。
+  - 使用范围
+    - 管理焦点、文本选择或者媒体播放
+    - 触发强制动画
+    - 集成第三方 DOM 库
+
+  ```javascript
+  const FancyButton = React.forwardRef((props, ref) => (
+    <button ref={ref} className="FancyButton">
+      {props.children}
+    </button>
+  ));
+
+  // 你可以直接获取 DOM button 的 ref：
+  const ref = React.createRef();
+  <FancyButton ref={ref}>Click me!</FancyButton>;
+  ```
+
 - Refs & DOM
+
+- 高阶组件
+
+  - 高阶组件是参数为组件，返回值为新组件的函数。
 
 - Render Props
 
-- 生命周期
+- 组件的生命周期
+
+  - class 组件才有生命周期
+
+  - 挂载阶段: 当组件实例被创建并插入 DOM 中时，其生命周期调用顺序如下
+
+    - constrctor()
+
+      说明：如果不初始化 state 或不进行方法绑定，则不需要为 React 组件实现构造函数。在 React 挂载之前会调用构造函数，在为 React.Component 子类实现构造函数时，应在其他语句之前前调用 super(props)。否则，this.props 在构造函数中可能会出现未定义的 bug。
+
+      构造函数仅用于以下两种情况：
+
+      1. 通过给 this.state 赋值对象来初始化内部 state。
+      2. 为事件处理函数绑定实例
+
+      注意：
+
+      1. 在 constructor() 函数中不要调用 setState() 方法。
+      2. 只能在构造函数中直接为 this.state 赋值。
+      3. 要避免在构造函数中引入任何副作用或订阅。如遇到此场景，请将对应的操作放置在 componentDidMount 中。
+      4. 避免将 props 的值复制给 state！
+
+    - static getDerivedStateFromProps()
+
+    - render()
+
+      说明：render() 方法是 class 组件中唯一必须实现的方法,render()函数为纯函数。当 render 被调用时，它会检查 this.props 和 this.state 的变化并返回以下类型之一
+
+      1. React 元素。通常通过 JSX 创建。
+      2. 数组或 fragments。 使得 render 方法可以返回多个元素。
+      3. Portals。可以渲染子节点到不同的 DOM 子树中。
+      4. 字符串或数值类型。它们在 DOM 中会被渲染为文本节点。
+      5. 布尔类型或 null。什么都不渲染。
+
+    - componentDidMount()
+
+      说明：componentDidMount() 会在组件挂载后（插入 DOM 树中）立即调用。可以在此处调用 setState(),将重新调用 render()渲染，但此渲染会发生在浏览器更新屏幕之前。如此保证了即使在 render() 两次调用的情况下，用户也不会看到中间状态。
+
+  - 更新阶段：当组件的 props 或者 state 发生变化时会触发更新。生命周期调用如下
+
+    - static getDerivedStateFromProps()
+
+      说明：getDerivedStateFromProps 会在调用 render 方法之前调用，并且在初始挂载及后续更新时都会被调用。它应返回一个对象来更新 state，如果返回 null 则不更新任何内容。
+
+    - shouldComponentUpdate(nextProps, nextState)
+
+      说明：根据 shouldComponentUpdate() 的返回值，判断 React 组件的输出是否受当前 state 或 props 更改的影响。当 props 或 state 发生变化时，shouldComponentUpdate() 会在渲染执行之前被调用。返回值默认为 true。首次渲染或使用 forceUpdate() 时不会调用该方法，如果 shouldComponetUpdate()方法返回 false,则不会调用其后面的生命周期方法。
+
+    - render()
+
+    - getSnapshotBeforeUpdate()
+
+      说明：getSnapshotBeforeUpdate() 在最近一次渲染输出（提交到 DOM 节点）之前调用。它使得组件能在发生更改之前从 DOM 中捕获一些信息（例如，滚动位置）。此生命周期的任何返回值将作为参数传递给 componentDidUpdate()。
+
+    - componentDidUpdate(prevProps, prevState, snapshot)
+
+      说明：componentDidUpdate() 会在更新后会被立即调用。首次渲染不会执行此方法。当组件更新后，可以在此处对 DOM 进行操作。你也可以在 componentDidUpdate() 中直接调用 setState()，但请注意它必须被包裹在一个条件语句里，否则会导致死循环。如果组件实现了 getSnapshotBeforeUpdate() 生命周期（不常用），则它的返回值将作为 componentDidUpdate() 的第三个参数 “snapshot” 参数传递。否则此参数将为 undefined。
+
+      ```javascript
+        componentDidUpdate(prevProps) {
+          // 典型用法（不要忘记比较 props）：
+          if (this.props.userID !== prevProps.userID) {
+            this.fetchData(this.props.userID);
+          }
+        }
+      ```
+
+  - 卸载阶段：当组件从 DOM 中移除时调用
+
+    - componentWillUnmount()
+
+      说明：componentWillUnmount() 会在组件卸载及销毁之前直接调用。不应调用 setState()，因为该组件将永远不会重新渲染。
+
+  - 错误处理
+
+    - static getDerivedStateFromError()
+
+      说明：此生命周期会在后代组件抛出错误后被调用。 它将抛出的错误作为参数，并返回一个值以更新 state
+
+    - componentDidCatch()
+
+      说明：此生命周期在后代组件抛出错误后被调用。 它接收两个参数：、
+
+      1. error —— 抛出的错误。
+      2. info —— 带有 componentStack key 的对象，其中包含有关组件引发错误的栈信息。
+
+  - 强制更新
+
+    - forceUpdate()
+
+      说明：默认情况下，当组件的 state 或 props 发生变化时，组件将重新渲染。如果 render() 方法依赖于其他数据，则可以调用 forceUpdate() 强制让组件重新渲染。调用 forceUpdate() 将致使组件调用 render() 方法，此操作会跳过该组件的 shouldComponentUpdate()。但其子组件会触发正常的生命周期方法，包括 shouldComponentUpdate() 方法。如果标记发生变化，React 仍将只更新 DOM。
 
 - 事件合成
 
+  - event.preventDefault event.stopPropagation
+
 - HOOK
+
+  - 什么是 Hook:
+    Hook 是一些可以让你在函数组件里“钩入” React state 及生命周期等特性的函数。
+
+  - Hook 规则
+    只能在函数最外层调用 Hook。不要在循环、条件判断或者子函数中调用。
+    只能在 React 的函数组件中调用 Hook。
+
+  - State Hook
+
+    - 为函数组件引入 state ，state 中变量会被 Reat 保留
+    - useState()函数它返回一个有两个值的数组，第一个值当前 state 和第二个值更新 state 的函数
+    - state 更新区别：调用 class 的 this.setState() 的时候 React 会把提供的对象浅合并到当前对象，而 useState Hook 则是替换。
+
+  - Effect Hook
+
+    可以让函数组件执行副作用操作，如获取数据、设置订阅、手动操作 DOM 等。可以看成 class 生命周期 componentDidmount componentDidUpdate componentWillunmount 的组合
+    使用 return function 清除 effect，每次重新渲染都会执行一次清除
+    比 class 组件生命周期更灵活，可以将相关的逻辑代码按用途分离到不同的 useEffect()中
+
+    执行规则：
+
+    1. 重新渲染时，每次都会生成新的 effect
+    2. 首次加载时执行一次 effect，即 componentDidmount，清除 effect 被保存
+    3. 当 props 或 state 更新，重新渲染时先执行清除 effect，即清除首次加载的 effect,在运行当前生成的 effect
+    4. 后续以此类推，避免了在 class 组件中因为没有处理更新逻辑而导致常见的 bug。
+
+  - 自定义 Hook
+    在组件之间共享一些状态逻辑，目前主流方案使用高阶组件（HOC）和 render props。自定义 Hook 可以在不增加组件的情况下达到同样目的。
+    如果函数名以“use”开头并调用其他 Hook，就是自定义 Hook。
+
+  - useReducer
+
+    ```javascript
+    const [state, dispatch] = useReducer(reducer, initialArg, init);
+    ```
+
+    在某些场景下，useReducer 会比 useState 更适用，例如 state 逻辑较复杂且包含多个子值，或者下一个 state 依赖于之前的 state 等。
+
+## Redux 篇
+
+- Action
+
+- Reducer
+
+- Store
+
+```javascript
+// reducer.js 整合于与store结构对应的redecer,返回一个新的state更新上一个state，类似 Object.assign()
+import { combineReducers } from "redux";
+const Test = combineReducers({
+  A,
+  B,
+});
+
+export default Test;
+
+// store.js
+import { createStore } from "redux";
+import doTest from "reducer.js";
+const store = createStore(doTest, initState);
+store.getState(); // 获取state
+const unsubscribe = store.subscribe(() => {
+  console.log(store.getState());
+});
+
+store.dispatch(action);
+unsubscribe();
+
+// react component 关联React组件和Redux
+import { connet } from "react-redux";
+
+function Game(props) {
+  return (
+    <div onclick={() => props.onClickHandeler(id)}>
+      {props.a}
+    </div>
+  )
+}
+
+// 先映射 state dispatch 到组建的 props 中
+const mapStateToProps = (state) => {
+  return {
+    a: state.a,
+  };
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onClickHandeler: (id) {
+      dispatch(action)
+    },
+  };
+};
+
+const XXX = connect(mapStateToProps,mapDispatchToProps)(Game)
+export XXX
+
+// index.js
+import store from "store.js"
+import {Provider} from "react-redux"
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById("root")
+);
+
+```
 
 ## NodeJs 篇
 
 ---
+
+### 基础篇
+
+- 介绍：Node.js 是一个开源的跨平台的 javascript 运行时环境，在浏览器外运行 V8 javascript 引擎。Node.js 在其标准库中提供了一组异步的 I/O 原生功能（用以防止 JavaScript 代码被阻塞），并且 Node.js 中的库通常是使用非阻塞的范式编写的（从而使阻塞行为成为例外而不是规范）。这使 Node.js 可以在一台服务器上处理数千个并发连接，而无需引入管理线程并发的负担，使用 CommonJs 规范。
+
+- 环境变量
+
+  Node.js 的 process 核心提供 env 属性，该属性承载了在启动进程时设置的所有的环境变量。
+
+  ```javascript
+  process.env.NODE_ENV; // NODE_ENV 环境变量默认被设置为 "development"
+  ```
+
+- REPL
+
+  REPL 是一种编程语言环境（主要是控制台窗口），它使用单个表达式作为用户输入，并在执行后将结果返回到控制台。
+  在终端输入 node 进入该模式
+
+- 接收参数
+
+  执行 node app.js 或 node app.js name=joe
+
+  接收参数使用 process,它对外提供 argv 属性，该属性是一个包含所有命令行调用参数的数组
+
+  1. 第一个参数是 node 命令的完整路径
+  2. 第二个参数是正在被执行文件的完整路径
+  3. 所有其他的参数从第三个位置开始
+
+  ```javascript
+  // 可以使用循环迭代所有的参数（包括 node 路径和文件路径）
+  process.argv.forEach((val, index) => {});
+  // 也可以通过创建一个排除了前两个参数的新数组来仅获取其他的参数：
+  const args = process.argv.slice(2);
+  // 如果参数没有索引名称，例如：node app.js joe
+  const args = process.argv.slice(2);
+  args[0];
+  // 如果是这种情况：node app.js name=joe
+  // 则 args[0] 是 name=joe，需要对其进行解析。 最好的方法是使用 minimist 库，该库有助于处理参数：
+  const args = require("minimist")(process.argv.slice(2));
+  args["name"]; //joe
+  // 但是需要在每个参数名称之前使用双破折号：node app.js --name=joe
+  ```
+
+- 输出到命令行
+
+  - 控制台模块基础输出
+
+    Node.js 提供 console 模块，与浏览器中的 console 对象相同
+
+    ```javascript
+      console.log('我的%s已经%d岁', '猫', 2)
+
+      * %s 会格式化变量为字符串
+      * %d 会格式化变量为数字
+      * %i 会格式化变量为其整数部分
+      * %o 会格式化变量为对象
+    ```
+
+  - 清空控制台
+    console.clear() 会清除控制台（其行为可能取决于所使用的控制台）。
+
+  - console.count() 是一个便利的方法
+
+    ```javascript
+    const x = 1;
+    const y = 2;
+    const z = 3;
+    console.count("x 的值为 " + x + " 且已经检查了几次？");
+    console.count("x 的值为 " + x + " 且已经检查了几次？");
+    console.count("y 的值为 " + y + " 且已经检查了几次？");
+    ```
+
+  - 计算耗时
+    可以使用 time() 和 timeEnd() 轻松地计算函数运行所需的时间：
+
+    ```javascript
+    const doSomething = () => console.log("测试");
+    const measureDoingSomething = () => {
+      console.time("doSomething()");
+      //做点事，并测量所需的时间。
+      doSomething();
+      console.timeEnd("doSomething()");
+    };
+    measureDoingSomething();
+    ```
+
+  - 创建进度条
+    Progress 是一个很棒的软件包，可在控制台中创建进度条。 使用 npm install progress 进行安装。
+
+  ```javascript
+  // 以下代码段会创建一个 10 步的进度条，每 100 毫秒完成一步。 当进度条结束时，则清除定时器：
+  const ProgressBar = require("progress");
+  const bar = new ProgressBar(":bar", { total: 10 });
+  const timer = setInterval(() => {
+    bar.tick();
+    if (bar.complete) {
+      clearInterval(timer);
+    }
+  }, 100);
+  ```
+
+  - exports 抛出模块
+    第一种方式是将对象赋值给 module.exports（这是模块系统提供的对象），这会使文件只导出该对象：
+
+    ```javascript
+    const car = {
+      brand: "Ford",
+      model: "Fiesta",
+    };
+
+    module.exports = car;
+
+    //在另一个文件中
+
+    const car = require("./car");
+    ```
+
+    第二种方式是将要导出的对象添加为 exports 的属性。这种方式可以导出多个对象、函数或数据：
+
+    ```javascript
+    const car = {
+      brand: "Ford",
+      model: "Fiesta",
+    };
+
+    exports.car = car;
+
+    // 或者
+
+    exports.car = {
+      brand: "Ford",
+      model: "Fiesta",
+    };
+
+    // 在另一个文件中，则通过引用导入的属性来使用它：
+    const items = require("./items");
+    items.car;
+    // or
+    const car = require("./items").car;
+    ```
+
+    module.exports 和 export 之间有什么区别？
+    前者公开了它指向的对象。 后者公开了它指向的对象的属性。
+
+  - Node.js 事件循环
+
+    - 前提须知
+
+      Node.js 事件循环与浏览器事件循环不同，需要区分开来
+
+    - 什么是 Node.js 事件循环
+
+      事件循环让 Node.js 可以通过将操作转移到系统内核中来执行异步且具有非阻塞的 I/O（尽管 Javascript 是单线程的），但是由于内核都是多线程的，因此它们可以处理在后台执行的多个操作。当其中一个操作完成时，内核会告诉 Node.js，以便 Node.js 可以将相应的回调添加到轮询队列中以最终执行。当 Node.js 启动时会初始化 event loop，每一个 enent loop 都会包含按如下顺序六个循环阶段：
+
+      ````flow
+        st=>start: timers
+        op1=>operation: I/O callbacks
+        op2=>operation idle,prepare
+        op3=>operation poll
+        op4=>operation check
+        e5=>end close callbacks
+        st->op1->op2->op3->op4->e5->st
+      &```
+
+      ````
+
+    - 调用堆栈
+
+      调用堆栈是一个 LIFO 队列（后进先出）。
+      事件循环不断检查调用堆栈，以查看是否需要运行任何函数。执行时将找到的所有函数调用添加到调用堆栈中，并按顺序执行每个函数。
+
+    - 消息队列
+
+      当调用 setTimeout()时，浏览器或者 Node.js 会启动定时器。当定时器到期时，则回调函数被放入消息队列。
+      在消息队列中，用户出发的事件（如单机或键盘事件、或获取响应）也会在此排队，然后代码才会有机会对其做出反应。类似 onload 这样的 DOM 事件也如此。
+      事件循环会赋予调用堆栈优先级，它首先处理在调用堆栈中找到的所有东西，一旦其中没有任何东西，便开始处理消息队列中的东西。
+      我们不必等待诸如 setTimeout、fetch、或其他的函数来完成它们自身的工作，因为它们是由浏览器提供的，并且位于它们自身的线程中。 例如，如果将 setTimeout 的超时设置为 2 秒，但不必等待 2 秒，等待发生在其他地方。
+
+    - ES6 作业队列
+
+      ECMAScript 2015 引入了作业队列的概念，Promise 使用了该队列。这种方式会尽快地执行异步函数的结果，而不是放在调用堆栈的末尾。
+      在当前函数结束之前 resolve 的 Promise 会在当前函数之后被立即执行。
+
+      ```javascript
+      const bar = () => console.log("bar");
+
+      const baz = () => console.log("baz");
+
+      const foo = () => {
+        console.log("foo");
+        setTimeout(bar, 0);
+        new Promise((resolve, reject) =>
+          resolve("应该在 baz 之后、bar 之前")
+        ).then((resolve) => console.log(resolve));
+        baz();
+      };
+
+      foo();
+
+      // 打印输出
+      // foo
+      // baz
+      // 应该在 baz 之后、bar 之前
+      // bar
+      ```
+
+### API 篇
 
 ## Webpack 篇
 
