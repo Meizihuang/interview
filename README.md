@@ -915,38 +915,16 @@ ReactDOM.render(
 
       事件循环让 Node.js 可以通过将操作转移到系统内核中来执行异步且具有非阻塞的 I/O（尽管 Javascript 是单线程的），但是由于内核都是多线程的，因此它们可以处理在后台执行的多个操作。当其中一个操作完成时，内核会告诉 Node.js，以便 Node.js 可以将相应的回调添加到轮询队列中以最终执行。当 Node.js 启动时会初始化 event loop，每一个 enent loop 都会包含按如下顺序六个循环阶段：
 
-      flow
-      st=>start: Start|past:>http://www.google.com[blank]
-      e=>end: End:>http://www.google.com
-      op1=>operation: get_hotel_ids|past
-      op2=>operation: get_proxy|current
-      sub1=>subroutine: get_proxy|current
-      op3=>operation: save_comment|current
-      op4=>operation: set_sentiment|current
-      op5=>operation: set_record|current
+      ```flow
+      st=>start: 开始
+      op=>operation: My Operation
+      cond=>condition: Yes or No?
+      e=>end
+      st->op->cond
+      cond(yes)->e
+      cond(no)->op
 
-      cond1=>condition: ids_remain 空?
-      cond2=>condition: proxy_list 空?
-      cond3=>condition: ids_got 空?
-      cond4=>condition: 爬取成功??
-      cond5=>condition: ids_remain 空?
-
-      io1=>inputoutput: ids-remain
-      io2=>inputoutput: proxy_list
-      io3=>inputoutput: ids-got
-
-      st->op1(right)->io1->cond1
-      cond1(yes)->sub1->io2->cond2
-      cond2(no)->op3
-      cond2(yes)->sub1
-      cond1(no)->op3->cond4
-      cond4(yes)->io3->cond3
-      cond4(no)->io1
-      cond3(no)->op4
-      cond3(yes, right)->cond5
-      cond5(yes)->op5
-      cond5(no)->cond3
-      op5->e
+      ```
 
     - 调用堆栈
 
