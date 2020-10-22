@@ -518,11 +518,17 @@
   | Edge    |        Chakra         |                                                         Edge |
 
   国内浏览器都是多核，想要兼容国内银行系统切换到 Trident 内核，想要访问速度就切换到 Webkit 内核，Blink 发布后，就把 Webkit 切换成 Blink
+
   QQ 浏览器 Trident+Webkit (Blink)
+
   360 安全浏览器 Trident+Webkit (Blink)
+
   猎豹浏览器 Trident+Webkit (Blink)
+
   世界之窗 Trident+Webkit (Blink)
+
   搜狗高速浏览器 Trident+Webkit (Blink)
+
   UC 浏览器 Trident+Webkit (Blink)
 
   渲染进程是多线程的，主要包含以下一些主要线程
@@ -584,18 +590,22 @@
   **4. 运行时 Runtime**
 
   web 开发中，通常不直接使用 javascript 引擎。javascript 引擎是工作在一个环境（容器）内的，这个环境提供了一些额外的功能（API），代码在执行过程中可能会使用这些特性。
+
   js 运行在一个宿主环境中（一个可以识别并且执行 JS 代码的程序），这个容器需要做两件事：
 
-            - 解析js源码，转换成可执行的机器码并执行
-            - 暴露一些额外的对象（API），可以与js代码做交互
+  - 解析 js 源码，转换成可执行的机器码并执行
+  - 暴露一些额外的对象（API），可以与 js 代码做交互
 
   js 引擎：解析 js 源码，转换成可执行的机器码并执行
+
   js Runtime: 暴露一些额外的对象（API），可以与 js 代码做交互
+
   因此，可以理解为 js Runtime 就是 js 宿主环境创建的一个 scope，在这个 scope 中 js 可以访问宿主环境提供的一系列特性
+
   常见 js 宿主环境：
 
-          - web 浏览器
-          - node.js
+  - web 浏览器
+  - node.js
 
   两种环境下，对应的 js 引擎和 Runtime
 
